@@ -116,3 +116,43 @@ kff_page_url = url
 response = requests.get(kff_page_url, headers=headers)
 soup = BeautifulSoup(response.text, 'html.parser')
 print(soup)
+
+
+
+
+### Trial and error for finding the pct at risk pop
+
+    # state_url_key = str(state_url)
+    # url_text = make_url_request_using_cache(state_url_key, STATE_URL_CACHE)
+    # soup = BeautifulSoup(url_text, 'html.parser')
+    # park_instance_list = []
+    # searching_state = soup.find('ul', id='list_parks')
+    # parks_lis = searching_state.find_all('li', recursive=False)
+    # for li in parks_lis:
+    #     park_tag = li.find('a')
+    #     park_details_path = park_tag['href']
+    #     park_url = BASE_URL + park_details_path
+    #     park_instance_list.append(get_site_instance(park_url))
+    # return park_instance_list
+
+
+
+
+# column = soup.find(class_="ag-cell-no-focus ag-cell ag-cell-not-inline-editing ag-cell-value")
+# a = column.find(colid="Total, adults ages 18 and older__At-risk adults, as a share of all adults ages 18 and older")
+
+
+# def extract_at_risk_pop(url):
+#     state_stats = {}
+#     states_names = []
+#     site_url_key = str(url)
+#     url_text = make_url_request_using_cache(site_url_key, URL_CACHE)
+#     soup = BeautifulSoup(url_text, 'html.parser')
+#     #column = soup.find('tr')
+#     #info = soup.find_all('td', recursive=True)
+#     info_names = soup.find_all('td', style='width: 87px')
+#     for i in info_names[2:-1]:
+#         state_stats['state name'] = i.string
+#         states_names = i.string
+#     #perc_at_risk = a.string
+#     return states_names
