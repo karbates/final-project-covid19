@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import time
+import sqlite3
+import csv
+
 
 COVID_BASE_URL = 'https://covidtracking.com/api/states/daily'
 CACHE_FILE_NAME = 'cache.json'
@@ -125,9 +128,7 @@ def get_covid_data(state):
     #print(json.dumps(json_results, indent = 2))
     return state_covid_cases
 
-print(get_covid_data('NY'))
-
-#print(get_covid_data('United States'))
+#print(get_covid_data('NY'))
 
 
 # url = "https://www.kff.org/other/state-indicator/adults-at-higher-risk-of-serious-illness-if-infected-with-coronavirus/?currentTimeframe=0&selectedRows=%7B%22states%22:%7B%22iowa%22:%7B%7D%7D%7D&sortModel=%7B%22colId%22:%22Location%22,%22sort%22:%22asc%22%7D"
@@ -192,11 +193,11 @@ def make_url_request_using_cache(url, cache):
 
 
 
-def extract_at_risk_pop(url):
+def extract_at_risk_pop():
     state_names = []
     state_stats = []
     at_risk_pop = {}
-    site_url_key = str(url)
+    site_url_key = 'https://www.kff.org/global-health-policy/issue-brief/how-many-adults-are-at-risk-of-serious-illness-if-infected-with-coronavirus/'
     url_text = make_url_request_using_cache(site_url_key, URL_CACHE)
     soup = BeautifulSoup(url_text, 'html.parser')
     name = soup.find_all('td', style='width: 87px')
@@ -213,22 +214,30 @@ def extract_at_risk_pop(url):
     return at_risk_pop
 
 
+def write_at_risk_csv():
+    at_risk_pop_dict = extract_at_risk_pop()
+    with open('at_risk_pop.csv', mode='w') as risk_file:
+        writer = csv.writer(risk_file)
+        for key, value in at_risk_pop_dict.items():
+            writer.writerow([key, value])
+
+
 
 # def vaccinated_pop(url):
-#     table_text = []
+#     info_table = []
 #     url_key = str(url)
 #     url_text = make_url_request_using_cache(url_key, VAX_CACHE)
 #     soup = BeautifulSoup(url_text, 'html.parser')
-#     table = soup.find_all('script', type="text/javascript")
-#     for t in table[8:]:
-#         table_text.append(t.string)
-#     return table_text
+#     table = soup.find_all('script', type='text/javascript')
+#     info_needed = table[6]
+#     info_two = info_needed.strip('\n\tvar appJs = appJs || {};\n\tappJs = jQuery.extend(appJs, ')
+#     return info_two
 
-# print(vaccinated_pop('https://www.kff.org/other/state-indicator/adult-who-had-a-flu-shot-within-the-past-year/'))
+# print(vaccinated_pop('https://www.kff.org/other/state-indicator/adult-overweightobesity-rate-by-gender/'))
 
 
 
-# def vaccinated_pop(url):
+# def vaccinated_pop_two(url):
 #     table_text = []
 #     url_key = str(url)
 #     url_text = make_url_request_using_cache(url_key, VAX_CACHE)
@@ -237,3 +246,106 @@ def extract_at_risk_pop(url):
 #     for t in table[7:]:
 #         table_text.append(t.text)
 #     return table_text
+
+
+'''
+CREATING THE DATABASES
+'''
+
+DB_NAME = "covid_state_info.sqlite"
+
+def create_db():
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+
+    drop_risk_sql = '''
+        DROP TABLE IF EXISTS AtRiskPopulation;
+    '''
+
+    create_risk_sql = '''
+        CREATE TABLE IF NOT EXISTS AtRiskPopulation (
+            "Id"        INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+            "STATE" TEXT NOT NULL,
+            "PCT AT RISK POPULATION"  TEXT NOT NULL
+        );
+    '''
+
+    drop_state_sql = '''
+        DROP TABLE IF EXISTS StateInfo;
+    '''
+
+    create_state_sql = '''
+        CREATE TABLE IF NOT EXISTS StateInfo (
+            "Id" INTEGER PRIMARY KEY AUTOINCREMENT,
+            "FIPS" INTEGER NOT NULL,
+            "STATE" TEXT NOT NULL,
+            "STATE ABBRV" TEXT NOT NULL,
+            "NUMERIC INFO SITE" TEXT,
+            "INFORMATIONAL SITE"  TEXT,
+            "TWITTER"  TEXT
+        );
+    '''
+
+    cur.execute(drop_risk_sql)
+    cur.execute(drop_state_sql)
+
+    cur.execute(create_risk_sql)
+    cur.execute(create_state_sql)
+
+    conn.commit()
+    conn.close()
+
+
+
+def load_risk():
+
+    file_contents = open('at_risk_pop.csv', 'r')
+    csv_reader = csv.reader(file_contents)
+
+    insert_risk_sql = '''
+        INSERT INTO AtRiskPopulation
+        VALUES (NULL, ?, ?)
+    '''
+
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+
+
+    for r in csv_reader:
+        cur.execute(insert_risk_sql,
+            [
+                r[0], #state
+                r[1] #pct at risk
+            ]
+        )
+    conn.commit()
+    conn.close()
+
+
+def load_state():
+
+    file_contents = open('info.csv', 'r')
+    csv_reader = csv.reader(file_contents)
+
+    insert_state_sql = '''
+        INSERT INTO StateInfo
+        VALUES (NULL, ?, ?, ?, ?, ?, ?)
+    '''
+
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+
+    for r in csv_reader:
+        cur.execute(insert_state_sql,
+            [
+                r[8], #FIPS
+                r[9], #STATE
+                r[0], #STATE ABBRV
+                r[2], #NUM INFO SITE
+                r[3], #INFO SITE
+                r[4] #TWITTER
+            ]
+        )
+    conn.commit()
+    conn.close()
+
