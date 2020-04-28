@@ -33,3 +33,6 @@ They also have the option to select Tweet's from the CDC, Tweet's from the respe
 status and hospital bed information for the state. Upon submitting the form, the user is taken to a page displaying the information
 they selected. If they want, they can also navigate to a page with headlines relating to COVID-19 and plotted results for the number
 of confirmed cases, hospitalized cases, recovered cases, and deaths as a result of COVID-19.
+
+A video to show how a user could interact with this program is available here:
+https://www.loom.com/share/17fe455b6b88411aa86da97017dca975
