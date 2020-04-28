@@ -156,3 +156,142 @@ print(soup)
 #         states_names = i.string
 #     #perc_at_risk = a.string
 #     return states_names
+
+
+
+
+def get_covid_data(state):
+    state_covid_cases = {}
+    '''Obtain API data on daily counts of COVID cases.
+
+    Parameters
+    ----------
+    place: string
+        a state someone wants to see
+        the COVID totals for
+
+    Returns
+    -------
+    dict
+        a converted API return from COVID API
+    '''
+    params = {'state': state}
+    results = make_request_using_cache(COVID_BASE_URL, params, COVID_CACHE)
+    json_results = json.loads(results)
+    state_covid_cases[state] = {}
+    state_covid_cases[state][date] = {}
+    for group in json_results:
+        state_covid_cases[state]['date'] = group['date']
+        state_covid_cases[state]['positive cases'] = group['positive']
+        if 'hospitalizedCurrently' in group.keys():
+            state_covid_cases[state]['currently hospitalized'] = group['hospitalizedCurrently']
+        else:
+            state_covid_cases[state]['currently hospitalized'] = 0
+        if 'recovered' in group.keys():
+            state_covid_cases[state]['recovered'] = group['recovered']
+        else:
+            state_covid_cases[state]['recovered'] = 0
+        if 'death' in group.keys():
+            state_covid_cases[state]['deaths'] = group['death']
+        else:
+            state_covid_cases[state]['deaths'] = 0
+    return json_results
+
+
+
+
+
+def make_request_using_cache(url, params, cache):
+    request_key = construct_unique_key(url, params=params)
+    if request_key in cache.keys():
+        print("Using cache")
+        return cache[request_key]
+    else:
+        print("Fetching")
+        time.sleep(1)
+        response = requests.get(url, params=params)
+        cache[request_key] = response.text
+        save_cache(cache)
+        return cache[request_key]
+
+
+
+#date_formatted = datetime(year=int(date[0:4]), month=int(date[4:6]), day=int(date[6:8]))
+
+
+
+
+def get_covid_data(state):
+    state_covid_cases = {}
+    '''Obtain API data on daily counts of COVID cases.
+
+    Parameters
+    ----------
+    place: string
+        a state someone wants to see
+        the COVID totals for
+
+    Returns
+    -------
+    dict
+        a converted API return from COVID API
+    '''
+    params = {'state': state}
+    results = make_request_using_cache(COVID_BASE_URL, params, COVID_CACHE)
+    json_results = json.loads(results)
+    state_covid_cases[state] = {}
+    for group in json_results:
+        date = group['date']
+        state_covid_cases[state][date] = {}
+        state_covid_cases[state][date]['positive cases'] = group['positive']
+        if 'hospitalizedCurrently' in group.keys():
+            state_covid_cases[state][date]['currently hospitalized'] = group['hospitalizedCurrently']
+        else:
+            state_covid_cases[state][date]['currently hospitalized'] = 0
+        if 'recovered' in group.keys():
+            state_covid_cases[state][date]['recovered'] = group['recovered']
+        else:
+            state_covid_cases[state][date]['recovered'] = 0
+        if 'death' in group.keys():
+            state_covid_cases[state][date]['deaths'] = group['death']
+        else:
+            state_covid_cases[state][date]['deaths'] = 0
+    return state_covid_cases
+
+
+
+
+def get_fips():
+    state = []
+    site_url_key = "https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code"
+    url_text = make_url_request_using_cache(site_url_key, FIPS_CACHE)
+    soup = BeautifulSoup(url_text, 'html.parser')
+    #name = soup.find('tbody')
+    name = soup.find_all('tr', align="center")
+    for n in name:
+        state.append(n.string)
+    return state
+
+print(get_fips())
+
+
+
+# def write_at_risk_csv():
+#     at_risk_pop_dict = extract_at_risk_pop()
+#     with open('at_risk_pop.csv', mode='w') as risk_file:
+#         writer = csv.writer(risk_file)
+#         for key, value in at_risk_pop_dict.items():
+#             writer.writerow([key, value])
+
+
+
+
+    <h3>{% if want_state_hd_tweets %} {{ states }} Health Department Tweets: </h3>
+        <ol>
+            {% for t in state_tweets %}
+                <li>{{t}}</li>
+            {% endfor %}
+            </ol>
+        {% endif %}
+    <p> {{ state_tweets }}</p>
+    <p> {{ from_acct }}</p>

@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF8"/>
+    <title>COVID-19 Plots</title>
+    <style>
+        table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plotted information for {{ state_name }}</h1>
+    <h3>Health Status Stats for {{ state_name }}</h3>
+        <ul>
+            <li>"Percent at Risk in the State" is defined as the proportion of adults in the state's population
+                    that are at higher risk of an adverse outcome if the contract COVID-19, due to pre-existing conditions.</li>
+            <li>Obesity is suspected of being a high risk factors for patients that contract COVID-19 so it is included to contextualize the health status of a state.</li>
+            <li>The number of ICU beds and hospital beds for a state are also intended to help contexutalize a state's health status.</li>
+        </ul>
+    <table>
+        <tr>
+            <th>Percent at Risk in the State</th>
+            <th>Percentage of Obese Adults in the State</th>
+            <th>ICU Beds in the State</th>
+            <th>Hospital Beds in the State</th>
+        </tr>
+        <tr>
+            <td>{{ pct_at_risk_stat }}</td>
+            <td>{{ state_obese_pop }}</td>
+            <td>{{ state_icu_beds }}</td>
+            <td>{{ state_hosp_beds }}</td>
+        </tr>
+    </table>
+
+    <h3>Navigation Options</h3>
+        <ul>
+            <li>See popular, national <a href='/articles'>headlines</a> related to COVID-19.</li>
+            <li>Return <a href='/'> home</a> to select another state.</li>
+        </ul>
+
+    <h2>Plots for {{ state_name }}: </h2>
+
+    <h3>Positive Cases</h3>
+    {{plot_div1 | safe}}
+
+    <h3>Currently Hospitalized</h3>
+    <p>Information not available for all states</p>
+    {{plot_div2 | safe}}
+
+    <h3>Recovered</h3>
+    <p>Information not available for all states</p>
+    {{plot_div3 | safe}}
+
+    <h3>Deaths</h3>
+    {{plot_div4 | safe}}
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf8"/>
+    <title>Select a State Homepage</title>
+</head>
+<body>
+    <h1>COVID-19 Dashboard for SI 507</h1>
+    <p>The objective of this project is to aggregate data from the <a href='https://covidtracking.com/api'>COVID-19 Tracking API</a> and contextualize it with state-level statistics
+        from the <a href='https://www.kff.org/statedata/'>Kaiser Family Foundation</a>. The COVID-19 API is updated every evening around 6:00PM so this dashboard should reflect
+        updated information at that time. However, the case counts are most likely undercounts so please confer with multiple sources for accurate totals.
+
+        Recent relevant Tweets and headlines are also made available through the Twitter developer's API and the NewsApi.
+    </p>
+    <form action="/handle_form" method="POST">
+        <h3>Select a state or territory for updates on COVID-19 cases in the United States and information from their health department</h2>
+            <img src="https://thumbs-prod.si-cdn.com/mGzVOiub9nq8OQFc0Q_q90D1JWw=/fit-in/1600x0/https://public-media.si-cdn.com/filer/79/4a/794a7e74-8c99-4fde-abcd-a303bc302ba1/sars-cov-19.jpg", width=400 />
+            <p>
+            What state or territory would you like to see results for?
+            <select name = "states">
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="GU">Guam</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MS">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NA">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="MP">Northern Mariana Islands</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="PR">Puerto Rico</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="VI">US Virgin Islands</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+            </select>
+        </p>
+        <p>
+            <h3>What else would you like to see with the state data?</h3>
+            <input type="checkbox" name="health_status"> Health Status for the State <br/>
+            <input type="checkbox" name="cdc_tweets"> Recent CDC Tweets <br/>
+            <input type="checkbox" name="state_hd_tweets"> Recent Tweets from the State's Health Department <br/>
+        </p>
+        <p>
+            <h3>Recent headlines regarding COVID-19 can be found <a href='/articles'> here.</a></h3>
+        </p>
+        <p>Before seeing results, a friendly reminder to do you part for public health and save lives by: </p>
+        <ul>
+            <li>Staying home</li>
+            <li>Washing your hands for 20 seconds</li>
+            <li>Practicing safe, physical distancing</li>
+        </ul>
+        <input type="submit" value="See Results"/>
+    </form>
+    <p>
+    <b>Acknowledgements and Thanks</b>
+        <p>A sincere thank you to Kangning Chen and Professor Mark Newman for their wonderful instruction and guidance this semester.</p>
+        <p> Data for this project is aggregated from the following sources:</p>
+        <ul>
+            <li> The COVID Tracking Project </li>
+            <li> The Kaiser Family Foundation </li>
+            <li> Twitter </li>
+            <li> NewsAPI </li>
+        </ul>
+    </p>
+</body>
+</html>

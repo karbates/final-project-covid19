@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf8"/>
+    <title>HTML Form Response</title>
+    <style>
+        table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>You selected: {{ state_name }}</h1>
+    <h3>{% if want_cdc_tweets %} CDC Tweets: </h3>
+        <ol>
+            {% for t in cdc_tweets %}
+                <li>{{t}}</li>
+            {% endfor %}
+            </ol>
+        {% endif %}
+        <h3>{% if want_state_hd_tweets %} {{ state_name }} Health Department Tweets: </h3>
+        <ol>
+            {% for t in state_tweets %}
+                <li>{{t}}</li>
+            {% endfor %}
+            </ol>
+        {% endif %}
+</body>
+<body>
+    <h3>Navigation Options</h3>
+        <ul>
+            <li>See <a href='{{ graph_link }}'>plots</a> for {{ state_name }}'s stats.</li>
+            <li>See popular, national <a href='/articles'>headlines</a> related to COVID-19.</li>
+            <li>Return <a href='/'>home</a>.</li>
+        </ul>
+</body>
+    <h3>{% if want_health_status %} Health Status Stats for {{ state_name }}</h3>
+        <ul>
+            <li>"Percent at Risk in the State" is defined as the proportion of adults in the state's population
+                    that are at higher risk of an adverse outcome if they contract COVID-19, due to pre-existing conditions.</li>
+            <li>Obesity is suspected of being a high risk factor for patients that contract COVID-19 so it is included to contextualize the health status of a state.</li>
+            <li>The number of ICU beds and hospital beds for a state are also intended to help contexutalize a state's health status.</li>
+        </ul>
+    <table>
+        <tr>
+            <th>Percent at Risk in the State</th>
+            <th>Percentage of Obese Adults in the State</th>
+            <th>ICU Beds in the State</th>
+            <th>Hospital Beds in the State</th>
+        </tr>
+        <tr>
+            <td>{{ pct_at_risk_stat }}</td>
+            <td>{{ state_obese_pop }}</td>
+            <td>{{ state_icu_beds }}</td>
+            <td>{{ state_hosp_beds }}</td>
+        </tr>
+    </table>
+        {% endif %}
+<body>
+    <h3>COVID-19 Stats for {{state_name}}</h3>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Positive Cases</th>
+            <th>Currently Hospitalized</th>
+            <th>Recovered</th>
+            <th>Deaths</th>
+        </tr>
+        {% for key, values in state_info.items() %}
+            <tr>
+                <th> {{ key }} </th>
+            {% for value in values.values() %}
+                <td> {{ value }} </td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Recent COVID-19 Related Headlines in the United States</title>
+</head>
+<body>
+    <h1>Recent COVID-19 Related Headlines in the United States</h1>
+        <ul>
+        {% for a in articles %}
+            <li>{{a}}</li>
+        {% endfor %}
+        </ul>
+    <h3>Return <a href='/'> home</a> to select state specific information.</h3>
+</body>
+</html>
